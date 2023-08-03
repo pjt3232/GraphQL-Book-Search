@@ -7,13 +7,14 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
     saveBook(input: SaveBookInput!): User
-    removeBook(bookId: String!): User
+    removeBook(bookId: ID!): User
   }
 
   type User {
     _id: ID
     username: String
     email: String
+    password: String
     bookCount: Int
     savedBooks: [Book]
   }

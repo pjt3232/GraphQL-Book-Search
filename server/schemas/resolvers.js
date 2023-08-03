@@ -57,22 +57,12 @@ const resolvers = {
                 throw new Error('Could not save the book');
             } 
         },
-        removeBook: async (parent, { bookId }, context) => {
+        removeBook: async (parent, args, context) => {
             if (!context.user) {
                 throw new Error('Not authenticated. Please log in.');
             }
 
-            const updatedUser = await User.findOneAndUpdate(
-                { _id: context.user._id },
-                { $pull: { savedBooks: { bookId } } },
-                { new: true }
-            );
-
-            if (!updatedUser) {
-                throw new Error("Couldn't find user with this id!");
-            }
-
-            return updatedUser;
+            return User.findOneAndDelete({ _id: context.user._id });
         },
     },
 };
