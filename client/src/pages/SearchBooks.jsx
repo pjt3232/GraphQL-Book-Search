@@ -29,7 +29,7 @@ const SearchBooks = () => {
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
   useEffect(() => {
     return () => saveBookIds(savedBookIds);
-  });
+  }, []);
 
   // create method to search for books and set state on form submit
   const handleFormSubmit = async (event) => {
@@ -84,8 +84,10 @@ const SearchBooks = () => {
         throw new Error('Something went wrong!');
       }
 
+      if (data.saveBook) {
       // if book successfully saves to user's account, save book id to state
-      setSavedBookIds([...savedBookIds, data.saveBook._id]);
+        setSavedBookIds([...savedBookIds, data.saveBook]);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -127,8 +129,8 @@ const SearchBooks = () => {
         <Row>
           {searchedBooks.map((book) => {
             return (
-              <Col md="4">
-                <Card key={book.bookId} border='dark'>
+              <Col key={book.bookId} md="4">
+                <Card border='dark'>
                   {book.image ? (
                     <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
                   ) : null}

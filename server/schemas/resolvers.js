@@ -5,7 +5,7 @@ const resolvers = {
     Query: {
         me: async (parent, args, context) => {
             if (context.user) {
-                const foundUser = await User.findById(context.user._id);
+                const foundUser = await User.findOne({_id: context.user._id});
                 return foundUser;
             }
             throw new Error('Not authenticated. Please log in.');
@@ -57,12 +57,23 @@ const resolvers = {
                 throw new Error('Could not save the book');
             } 
         },
-        removeBook: async (parent, args, context) => {
+        removeBook: async (parent, { bookId }, context) => {
             if (!context.user) {
                 throw new Error('Not authenticated. Please log in.');
             }
 
-            return User.findOneAndDelete({ _id: context.user._id });
+            try {
+                const updatedUser = await User.findByIdAndUpdate(
+                    context.user._id,
+                    { $pull: { savedBooks: { bookId } } },
+                    { new: true }
+                ).populate('savedBooks');
+
+                return updatedUser;
+            } catch (err) {
+                console.error(err);
+                throw new Error('Failed to remove the book.');
+            }
         },
     },
 };
