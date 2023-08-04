@@ -1,6 +1,6 @@
 # GraphQL-Book-Search
 
-![GraphQL Book Search Screenshot](https://drive.google.com/file/d/1z5S7H0butPbA70nV7xU8Qks350VDeg2W/view?usp=sharing)
+![Screenshot](./client/public/images/GraphQL-Book-Search-Screenshot.png)
 
 ## Description
 My task for this project was to take a functional application that used RESTful API calls and update it to use the GraphQL API software to make the application faster and more effecient. This book search engine is a web application that allows users to search for books using the Google Books API. Users can enter keywords or book titles in the search bar, and the app will display a list of books matching the search query. Users can view details of each book, including the title, authors, description, and cover image. Additionally, registered users can save their favorite books to their account for easy accesss later. 
