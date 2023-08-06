@@ -8,6 +8,7 @@ import SavedBooks from './pages/SavedBooks';
 import Signup from './components/SignupForm';
 import Login from './components/LoginForm';
 
+// create browser router to handle page redirection
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
   },
 ]);
 
+// creates root element of the page with the router provider
 ReactDOM.createRoot(document.getElementById('root')).render(
   <RouterProvider router={router} />
 );

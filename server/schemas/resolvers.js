@@ -3,6 +3,7 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
+        // finds user based on their id
         me: async (parent, args, context) => {
             if (context.user) {
                 const foundUser = await User.findOne({_id: context.user._id});
@@ -12,6 +13,8 @@ const resolvers = {
         },
     },
     Mutation: {
+        // finds user by email and then checks if password is correct
+        // if password is correct it creates a token for the logged in user
         login: async (parent, { email, password }) => {
             const user = await User.findOne({ 
                 $or: [{username: email }, { email }]
@@ -30,6 +33,7 @@ const resolvers = {
             const token = signToken(user);
             return { token, user };
         },
+        // creates a user with username, email, password and assigns a token to that user
         addUser: async (parent, { username, email, password }) => {
             const user = await User.create({ username, email, password });
             if (!user) {
@@ -39,6 +43,7 @@ const resolvers = {
             const token = signToken(user);
             return { token, user };
         },
+        // finds user by id and then adds input of saved book to the user's saved book array
         saveBook: async (parent, { input }, context) => {
             if (!context.user) {
                 throw new Error('Not authenticated. Please log in.');
@@ -57,6 +62,7 @@ const resolvers = {
                 throw new Error('Could not save the book');
             } 
         },
+        // finds user by id and then removes the specified bookId from the user's saved books array
         removeBook: async (parent, { bookId }, context) => {
             if (!context.user) {
                 throw new Error('Not authenticated. Please log in.');

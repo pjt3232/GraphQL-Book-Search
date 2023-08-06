@@ -6,16 +6,22 @@ import { LOGIN_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 const LoginForm = () => {
+  // create state of userFormData to null values
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
+  // create state of validated user to false
   const [validated, setValidated] = useState(false);
+  // create state of alert to false
   const [showAlert, setShowAlert] = useState(false);
+  // create function using mutation to update user 
   const [login, { error }] = useMutation(LOGIN_USER);
 
+  // handles input change by taking the input and setting the userFormData to those values
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
 
+  // handles form submit for the login page
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -28,6 +34,7 @@ const LoginForm = () => {
     }
 
     try {
+      // waits for login using the user form data
       const { data } = await login({
         variables: { ...userFormData },
       });
@@ -36,14 +43,17 @@ const LoginForm = () => {
         throw new Error('Something went wrong!');
       }
 
+      // if login is correct uses user's JSON web token to sign in
       const { token, user } = data.login;
       console.log(user);
       Auth.login(token);
     } catch (err) {
       console.error(err);
+      // if login fails show an alert of the error
       setShowAlert(true);
     }
 
+    // set user form data back to null values
     setUserFormData({
       username: '',
       email: '',

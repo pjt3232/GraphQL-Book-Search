@@ -23,6 +23,7 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
+  // create a mutation to update user data of saved books
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
@@ -40,14 +41,17 @@ const SearchBooks = () => {
     }
 
     try {
+      // waits for searching google books based on search input using the Google Books API
       const response = await searchGoogleBooks(searchInput);
 
       if (!response.ok) {
         throw new Error('something went wrong!');
       }
 
+      // the search items will be the returned json data from the response
       const { items } = await response.json();
 
+      // book data will include all of these fields collected from the Google Books API
       const bookData = items.map((book) => ({
         bookId: book.id,
         authors: book.volumeInfo.authors || ['No author to display'],
@@ -57,6 +61,7 @@ const SearchBooks = () => {
         link: `https://books.google.com/books?id=${book.id}`,
       }));
 
+      // updates state of searched books and the search input
       setSearchedBooks(bookData);
       setSearchInput('');
     } catch (err) {
@@ -77,6 +82,7 @@ const SearchBooks = () => {
     }
 
     try {
+      // waits for saving saved booj to user data based on the params book
       const { data } = await saveBook({
         variables: { input: bookToSave },
       });

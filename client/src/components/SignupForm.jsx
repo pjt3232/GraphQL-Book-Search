@@ -11,14 +11,16 @@ const SignupForm = () => {
   const [validated, setValidated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
-
+  // create mutation for adding a user
   const [addUser, { error }] = useMutation(ADD_USER);
 
+  // handles input change by taking the input and setting the userFormData to those values
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
 
+  // handles form submit for the signup page
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -31,6 +33,7 @@ const SignupForm = () => {
     }
     
     try {
+      // waits for creating a user with the user form data
       const { data } = await addUser({
         variables: { ...userFormData },
       });
@@ -39,6 +42,7 @@ const SignupForm = () => {
         throw new Error('Something went wrong!');
       }
 
+      // if sign up is successful creates a JSON web token for the user and logs then into the page
       const { user, token } = data.addUser;
       console.log(user);
       Auth.login(token);
@@ -47,6 +51,7 @@ const SignupForm = () => {
       setShowAlert(true);
     }
 
+    // set user form data back to null values
     setUserFormData({
       username: '',
       email: '',

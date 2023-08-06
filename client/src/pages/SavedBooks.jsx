@@ -13,29 +13,25 @@ import { REMOVE_BOOK } from '../utils/mutations';
 import { removeBookId } from '../utils/localStorage';
 import Auth from '../utils/auth';
 
+// SavedBooks will handle the saved books page & functionality
 const SavedBooks = () => {
+  // create user data
   const { data, loading } = useQuery(GET_ME);
+  // create a mutation to update the user data by removing saved book
   const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+  // create state of the user data
   const [userData, setUserData] = useState({});
 
-  //
-  //
-  //
-  // Remember to do comments !!!!!!!!!
-  //
-  //
-  //
-  // use this to determine if `useEffect()` hook needs to run again
-
-  console.log(data);
+  // if there is user data it sets the user data to the current user's json web token
   useEffect(() => {
     if (data) {
       setUserData(data.me);
     }
   }, [data]);
 
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
+  // handles deleting a book from the saved books page
   const handleDeleteBook = async (bookId) => {
+    // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
@@ -43,6 +39,7 @@ const SavedBooks = () => {
     }
 
     try {
+      // uses removeBook mutation to remove the params book
       const { data } = await removeBook({
         variables: { bookId },
       });
@@ -51,14 +48,16 @@ const SavedBooks = () => {
         throw new Error('Something went wrong!');
       }
 
+      // removes book from local stoarge
       removeBookId(bookId);
+      // sets user data to the new array of saved books
       setUserData(data.removeBook);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // if data isn't here yet, say so
+  // if data isn't here yet, says loading
   if (loading) {
     return <h2>LOADING...</h2>;
   }
